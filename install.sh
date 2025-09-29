@@ -102,14 +102,22 @@ copiarConfigs () {
 
 aurHelper () {
 	if [ -z "$(command -v yay)" ]; then
+		echo "## AUR Helper Detectado: Yay"
+		aurHelperFound="Yay"
+		sleep 3
 		yay -S dracula-gtk-theme betterlockscreen --noconfirm --needed
 		echo "aurHelper=OK" >> log.txt
 
 	elif [ -z "$(command -v paru)" ]; then
+		echo "## AUR Helper Detectado: Paru"
+		aurHelperFound="Paru"
+		sleep 3
 		paru -S dracula-gtk-theme betterlockscreen --noconfirm --needed
 		echo "aurHelper=OK" >> log.txt
 	else
+		echo "## Instalando o Repositório do Chaotic AUR e o Yay"
 		chaoticAUR
+		aurHelperFound="Chaotic AUR"
 	fi
 }
 
@@ -199,34 +207,50 @@ if [ -e "log.txt" ]; then
 	
 	if ! [[ "$Diretorios" == "OK" ]]; then
 		verificarDiretorios
+	else
+		echo "# Diretórios: OK"
 	fi
 	
 	if ! [[ "$PacotesBasicos" == "OK" ]]; then
 		instalarPacotes
+	else
+		echo "# Pacotes Básicos: OK"
 	fi
 	
 	if ! [[ "$PacotesExtras" == "OK" ]]; then
 		instalarExtras
+	else
+		echo "# Pacotes Extras: OK"
 	fi
 		
 	if ! [[ "$Fontes" == "OK" ]]; then
 		instalarFontes		
+	else
+		echo "# Fontes do Sistema: OK"
 	fi
 		
 	if ! [[ "$Configs" == "OK" ]]; then
 		copiarConfigs
+	else
+		echo "# Configurações: OK"
 	fi
 		
 	if ! [[ "$aurHelper=OK" == "OK" ]]; then
 		aurHelper
+	else
+		echo "# AUR Helper: $aurHelperFound"
 	fi
 		
 	if ! [[ "$ConfigsFinais" == "OK" ]]; then
 		finalizarConfig
+	else
+		echo "# Configurações Finais: OK"
 	fi
 		
 	if ! [[ "$TemaPlank" == "OK" ]]; then
 		temaPlank
+	else
+		echo "# Tema da Plank: OK"
 	fi	
 else
 	verificarDiretorios
@@ -234,7 +258,7 @@ else
 	instalarExtras
 	instalarFontes
 	copiarConfigs
-	chaoticAUR
+	aurHelper
 	finalizarConfig
 	temaPlank
 	creditos
