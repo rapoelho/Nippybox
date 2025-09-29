@@ -100,7 +100,20 @@ copiarConfigs () {
 	echo "Configs=OK" >> log.txt
 }
 
-chaoticAUR () {
+aurHelper () {
+	if [ -z "$(command -v yay)" ]; then
+		yay -S dracula-gtk-theme betterlockscreen --noconfirm --needed
+		echo "aurHelper=OK" >> log.txt
+
+	elif [ -z "$(command -v paru)" ]; then
+		paru -S dracula-gtk-theme betterlockscreen --noconfirm --needed
+		echo "aurHelper=OK" >> log.txt
+	else
+		chaoticAUR
+	fi
+}
+
+chaoticAUR () {	
 	sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
 	sudo pacman-key --lsign-key 3056513887B78AEB
 	
@@ -113,7 +126,7 @@ chaoticAUR () {
 	
 	yay -S dracula-gtk-theme --noconfirm
 	
-	echo "ChaoticAUR=OK" >> log.txt
+	echo "aurHelper=OK" >> log.txt
 }
 
 finalizarConfig () {
@@ -204,8 +217,8 @@ if [ -e "log.txt" ]; then
 		copiarConfigs
 	fi
 		
-	if ! [[ "$ChaoticAUR" == "OK" ]]; then
-		chaoticAUR
+	if ! [[ "$aurHelper=OK" == "OK" ]]; then
+		aurHelper
 	fi
 		
 	if ! [[ "$ConfigsFinais" == "OK" ]]; then
