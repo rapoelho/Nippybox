@@ -2,7 +2,7 @@
 set -e
 
 LightDMBack="Autumn Countryside Landscape.png"
-Wallpaper="Autumn Countryside Landscape.png"
+
 log="/tmp/log.txt"
 
 OndeEstou=$(dirname "$0")
@@ -149,7 +149,7 @@ finalizarConfig () {
 	xdg-user-dirs-update
 
 	echo "## Aplicando o Esquema de Cores"
-	bash $HOME/.local/bin/nippy-colorizer "$Wallpaper" --no-X11
+	bash $HOME/.local/bin/nippy-colorizer "/usr/share/backgrounds/Autumn Countryside Landscape.png" --no-X11
 	
 	echo "## Aplicando Temas"
 	xfconf-query -c xsettings -p /Net/ThemeName -s "Dracula"
