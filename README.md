@@ -89,4 +89,6 @@ Não é só do Openbox e dos Scripts que o Nippybox é formado, mas também de u
 ## TODO
 - ~~Colocar o tema Dracula (GTK) e os ícones Papirus no Script de instalação;~~ **(Feito)**
 - ~~Fazer um Script para alternar entre o `picom` e o `xcompmgr`, principalmente em casos em que o Picom causa problemas;~~ **(Feito)**
+- Fazer uma versão minha dos Ícones Mágicos para a instalação de alguns aplicativos;
+- Testar o Nippybox em outras distros baseadas no Arch, e fazer ele identificar o AUR Helper em uso;
 - Configurar o Better Lockscreen para bloquear a tela quando o computador ficar inativo por um tempo.
