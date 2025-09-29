@@ -6,7 +6,7 @@ if [[ "$OndeEstou" == "." ]]; then
     OndeEstou=$(pwd)
 fi
 
-LightDMBack="Oranges by tamanna_rumee.png"
+LightDMBack="Autumn Countryside Landscape.png"
 
 verificarDiretorios () {
 	echo -e "\n## Verificando Diretórios..."
@@ -22,7 +22,7 @@ verificarDiretorios () {
 instalarPacotes () {
 	echo -e "\n## Instalando Pacotes Básicos..."
 	sleep 1
-	sudo pacman -Syu nano fastfetch openbox xorg obconf-qt archlinux-xdg-menu polybar rofi libnotify dunst nitrogen picom xcompmgr plank xfce4-settings xfce4-power-manager python-pywal maim xclip slop xdg-user-dirs ffmpeg acpi thunar alacritty geany pavucontrol viewnior network-manager-applet blueman gvfs xfce4-terminal pulsemixer xorg-xbacklight pulseaudio pulseaudio-bluetooth pulseaudio-alsa playerctl clipnotify noto-fonts-emoji bash-completion mate-system-monitor brightnessctl system-config-printer bluez-utils redshift curl qt5ct qt6ct --noconfirm --needed
+	sudo pacman -Syu nano fastfetch openbox xorg obconf-qt archlinux-xdg-menu polybar rofi libnotify dunst nitrogen picom xcompmgr plank xfce4-settings xfce4-power-manager python-pywal maim xclip slop xdg-user-dirs ffmpeg acpi thunar alacritty geany pavucontrol viewnior network-manager-applet blueman gvfs xfce4-terminal pulsemixer xorg-xbacklight pulseaudio pulseaudio-bluetooth pulseaudio-alsa playerctl clipnotify noto-fonts-emoji bash-completion mate-system-monitor brightnessctl system-config-printer bluez-utils redshift curl qt5ct qt6ct xcolor --noconfirm --needed
 	
 	echo "PacotesBasicos=OK" >> log.txt
 }
@@ -121,7 +121,7 @@ finalizarConfig () {
 	xdg-user-dirs-update
 
 	echo "## Aplicando o Esquema de Cores"
-	bash $HOME/.local/bin/nippy-colorizer "/usr/share/backgrounds/Tongue Cat by Nennieinszweidrei.png" --no-X11
+	bash $HOME/.local/bin/nippy-colorizer "/usr/share/backgrounds/Autumn Countryside Landscape.png" --no-X11
 	
 	echo "## Aplicando Temas"
 	xfconf-query -c xsettings -p /Net/ThemeName -s "Dracula"
@@ -139,6 +139,8 @@ finalizarConfig () {
 	sudo sed -i '$a\Hidden=true' /usr/share/applications/bvnc.desktop
 	sudo sed -i '$a\Hidden=true' /usr/share/applications/qv*
 	sudo sed -i '$a\Hidden=true' /usr/share/applications/rofi*
+	sudo sed -i '$a\Hidden=true' /usr/share/applications/xcolor.desktop
+	sudo sed -i '$a\Hidden=true' /usr/share/applications/picom.desktop
 
 	echo "## Gerando o .xinitrc..."
 	{
