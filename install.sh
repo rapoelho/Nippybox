@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 set -e
 
+LightDMBack="Autumn Countryside Landscape.png"
+Wallpaper="Autumn Countryside Landscape.png"
+log="/tmp/log.txt"
+
 OndeEstou=$(dirname "$0")
 if [[ "$OndeEstou" == "." ]]; then
     OndeEstou=$(pwd)
 fi
-
-LightDMBack="Autumn Countryside Landscape.png"
 
 verificarDiretorios () {
 	echo -e "\n## Verificando Diretórios..."
@@ -16,15 +18,20 @@ verificarDiretorios () {
 	mkdir -p $HOME/.themes/nippybox
 	mkdir -p $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/
 	
-	echo "Diretorios=OK" > log.txt
+	echo "Diretorios=OK" > "$log"
 }
 
 instalarPacotes () {
+	if ! [ -z "$(pacman -Qs | grep pipewire-pulse)" ]; then
+		echo -e "\n ## Removendo pacotes conflituosos"
+		sudo pacman -R pipewire-pulse --noconfirm
+	fi
+	
 	echo -e "\n## Instalando Pacotes Básicos..."
 	sleep 1
 	sudo pacman -Syu nano fastfetch openbox xorg obconf-qt archlinux-xdg-menu polybar rofi libnotify dunst nitrogen picom xcompmgr plank xfce4-settings xfce4-power-manager python-pywal maim xclip slop xdg-user-dirs ffmpeg acpi thunar alacritty geany pavucontrol viewnior network-manager-applet blueman gvfs xfce4-terminal pulsemixer xorg-xbacklight pulseaudio pulseaudio-bluetooth pulseaudio-alsa playerctl clipnotify noto-fonts-emoji bash-completion mate-system-monitor brightnessctl system-config-printer bluez-utils redshift curl qt5ct qt6ct xcolor --noconfirm --needed
 	
-	echo "PacotesBasicos=OK" >> log.txt
+	echo "PacotesBasicos=OK" >> "$log"
 }
 
 instalarExtras () {
@@ -74,7 +81,7 @@ instalarExtras () {
 	echo "## Corrigindo o Thunar..."
 	sudo nippy-hooks fix-thunar
 	
-	echo "PacotesExtras=OK" >> log.txt
+	echo "PacotesExtras=OK" >> "$log"
 }
 
 instalarFontes () {
@@ -83,7 +90,7 @@ instalarFontes () {
 	sudo fc-cache -f
 	cd $ondeEstou
 	
-	echo "Fontes=OK" >> log.txt
+	echo "Fontes=OK" >> "$log"
 }
 
 copiarConfigs () {
@@ -97,23 +104,23 @@ copiarConfigs () {
 	cp -r $OndeEstou/scripts/* $HOME/.local/bin/
 	chmod +x $HOME/.local/bin/*
 	
-	echo "Configs=OK" >> log.txt
+	echo "Configs=OK" >> "$log"
 }
 
 aurHelper () {
-	if [ -z "$(command -v yay)" ]; then
+	if ! [ -z "$(command -v yay)" ]; then
 		echo "## AUR Helper Detectado: Yay"
 		aurHelperFound="Yay"
 		sleep 3
 		yay -S dracula-gtk-theme betterlockscreen --noconfirm --needed
-		echo "aurHelper=OK" >> log.txt
+		echo "aurHelper=OK" >> "$log"
 
-	elif [ -z "$(command -v paru)" ]; then
+	elif ! [ -z "$(command -v paru)" ]; then
 		echo "## AUR Helper Detectado: Paru"
 		aurHelperFound="Paru"
 		sleep 3
 		paru -S dracula-gtk-theme betterlockscreen --noconfirm --needed
-		echo "aurHelper=OK" >> log.txt
+		echo "aurHelper=OK" >> "$log"
 	else
 		echo "## Instalando o Repositório do Chaotic AUR e o Yay"
 		chaoticAUR
@@ -134,7 +141,7 @@ chaoticAUR () {
 	
 	yay -S dracula-gtk-theme --noconfirm
 	
-	echo "aurHelper=OK" >> log.txt
+	echo "aurHelper=OK" >> "$log"
 }
 
 finalizarConfig () {
@@ -142,7 +149,7 @@ finalizarConfig () {
 	xdg-user-dirs-update
 
 	echo "## Aplicando o Esquema de Cores"
-	bash $HOME/.local/bin/nippy-colorizer "/usr/share/backgrounds/Autumn Countryside Landscape.png" --no-X11
+	bash $HOME/.local/bin/nippy-colorizer "$Wallpaper" --no-X11
 	
 	echo "## Aplicando Temas"
 	xfconf-query -c xsettings -p /Net/ThemeName -s "Dracula"
@@ -174,7 +181,7 @@ exec openbox-session
 EOF
 	} > $HOME/.xinitrc
 
-	echo "ConfigsFinais=OK" >> log.txt
+	echo "ConfigsFinais=OK" >> "$log"
 }
 
 temaPlank () {
@@ -193,7 +200,7 @@ InnerStrokeColor=255;;255;;255;;255
 EOF
 	} > $HOME/.local/share/plank/themes/Nippy/hover.theme
 
-	echo "TemaPlank=OK" >> log.txt
+	echo "TemaPlank=OK" >> "$log"
 }
 
 creditos () {
@@ -202,8 +209,8 @@ creditos () {
 
 echo -e "\nBem-vindo ao instalador do Nippybox!\nO Nippybox é uma personalização do Openbox com o objetivo de ser simples de usar em que juntei algumas coisas legais por aí e que me agradaram."
 
-if [ -e "log.txt" ]; then
-	source log.txt
+if [ -e "$log" ]; then
+	source "$log"
 	
 	if ! [[ "$Diretorios" == "OK" ]]; then
 		verificarDiretorios
