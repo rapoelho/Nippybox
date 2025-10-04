@@ -21,15 +21,31 @@ verificarDiretorios () {
 	echo "Diretorios=OK" > "$log"
 }
 
+instalarXLibre () {
+	echo "## Instalando o XLibre..."
+	sudo curl -sS https://raw.githubusercontent.com/X11Libre/binpkg-arch-based/refs/heads/main/0x73580DE2EDDFA6D6.gpg | gpg --import -
+	sudo pacman-key --lsign-key 73580DE2EDDFA6D6
+	
+	sudo sed -i '$a\[xlibre]\nServer = https://github.com/X11Libre/binpkg-arch-based/raw/refs/heads/main/\' /etc/pacman.conf
+	
+	sudo pacman -S xlibre-xserver --noconfirm --needed
+}
+
 instalarPacotes () {
 	if ! [ -z "$(pacman -Qs | grep pipewire-pulse)" ]; then
 		echo -e "\n ## Removendo pacotes conflituosos"
 		sudo pacman -R pipewire-pulse --noconfirm
 	fi
 	
+	if [[ "$1" == "--xlibre" ]]; then
+		instalarXLibre
+	else
+		sudo pacman -S xorg --noconfirm --needed
+	fi
+	
 	echo -e "\n## Instalando Pacotes Básicos..."
 	sleep 1
-	sudo pacman -Syu nano fastfetch openbox xorg obconf-qt archlinux-xdg-menu polybar rofi libnotify dunst nitrogen picom xcompmgr plank xfce4-settings xfce4-power-manager python-pywal maim xclip slop xdg-user-dirs ffmpeg acpi thunar alacritty geany pavucontrol viewnior network-manager-applet blueman gvfs xfce4-terminal pulsemixer xorg-xbacklight pulseaudio pulseaudio-bluetooth pulseaudio-alsa playerctl clipnotify noto-fonts-emoji bash-completion mate-system-monitor brightnessctl system-config-printer bluez-utils redshift curl qt5ct qt6ct xcolor --noconfirm --needed
+	sudo pacman -Syu nano fastfetch openbox obconf-qt archlinux-xdg-menu polybar rofi libnotify dunst nitrogen picom xcompmgr plank xfce4-settings xfce4-power-manager python-pywal maim xclip slop xdg-user-dirs ffmpeg acpi thunar alacritty geany pavucontrol viewnior network-manager-applet blueman gvfs xfce4-terminal pulsemixer xorg-xbacklight pulseaudio pulseaudio-bluetooth pulseaudio-alsa playerctl clipnotify noto-fonts-emoji bash-completion mate-system-monitor brightnessctl system-config-printer bluez-utils redshift curl qt5ct qt6ct xcolor --noconfirm --needed
 	
 	echo "PacotesBasicos=OK" >> "$log"
 }
@@ -37,7 +53,7 @@ instalarPacotes () {
 instalarExtras () {
 	echo "## Instalando Pacotes Extras..."
 	sleep 1
-	sudo pacman -S lightdm lightdm-gtk-greeter mate-system-monitor galculator xarchiver mpv xreader arj cpio lha lrzip lzip lzop p7zip unarj unzip cups sane thunar-volman thunar-archive-plugin thunar-media-tags-plugin tumbler ffmpegthumbnailer libgepub libgsf libopenraw poppler-glib freetype2 firefox gst-plugins-ugly gst-plugins-good gst-plugins-base gst-plugins-bad gst-libav gstreamer ntfs-3g mpv-mpris webp-pixbuf-loader libwebp tumbler papirus-icon-theme --noconfirm --needed
+	sudo pacman -S lightdm lightdm-gtk-greeter mate-system-monitor galculator xarchiver mpv xreader arj cpio lha lrzip lzip lzop p7zip unarj unzip cups sane thunar-volman thunar-archive-plugin thunar-media-tags-plugin tumbler ffmpegthumbnailer libgepub libgsf libopenraw poppler-glib freetype2 firefox gst-plugins-ugly gst-plugins-good gst-plugins-base gst-plugins-bad gst-libav gstreamer ntfs-3g mpv-mpris webp-pixbuf-loader libwebp tumbler papirus-icon-theme pacman-contrib --noconfirm --needed
 
 	if ! [ -z "$(ls /sys/class/power_supply/)" ]; then
 		echo "## Instalando o TLP..."
