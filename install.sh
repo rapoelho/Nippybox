@@ -21,39 +21,62 @@ verificarDiretorios () {
 	echo "Diretorios=OK" > "$log"
 }
 
-instalarXLibre () {
-	echo "## Instalando o XLibre..."
-	sudo curl -sS https://raw.githubusercontent.com/X11Libre/binpkg-arch-based/refs/heads/main/0x73580DE2EDDFA6D6.gpg | gpg --import -
-	sudo pacman-key --lsign-key 73580DE2EDDFA6D6
-	
-	sudo sed -i '$a\[xlibre]\nServer = https://github.com/X11Libre/binpkg-arch-based/raw/refs/heads/main/\' /etc/pacman.conf
-	
-	sudo pacman -S xlibre-xserver --noconfirm --needed
-}
-
 instalarPacotes () {
+	echo -e "\n## Atualizando os Pacotes do Sistema..."
+	sudo pacman -Syu  --noconfirm --needed
+	
 	if ! [ -z "$(pacman -Qs | grep pipewire-pulse)" ]; then
 		echo -e "\n ## Removendo pacotes conflituosos"
 		sudo pacman -R pipewire-pulse --noconfirm
 	fi
 	
-	if [[ "$1" == "--xlibre" ]]; then
-		instalarXLibre
-	else
-		sudo pacman -S xorg --noconfirm --needed
-	fi
+	echo -e "\n## Instalando o Servidor Gráfico X11"
+	sleep 2
+	sudo pacman -S xorg --noconfirm --needed
 	
-	echo -e "\n## Instalando Pacotes Básicos..."
-	sleep 1
-	sudo pacman -Syu nano fastfetch openbox obconf-qt archlinux-xdg-menu polybar rofi libnotify dunst nitrogen picom xcompmgr plank xfce4-settings xfce4-power-manager python-pywal maim xclip slop xdg-user-dirs ffmpeg acpi thunar alacritty geany pavucontrol viewnior network-manager-applet blueman gvfs xfce4-terminal pulsemixer xorg-xbacklight pulseaudio pulseaudio-bluetooth pulseaudio-alsa playerctl clipnotify noto-fonts-emoji bash-completion mate-system-monitor brightnessctl system-config-printer bluez-utils redshift curl qt5ct qt6ct xcolor --noconfirm --needed
+	echo -e "\n## Instalando Pacotes Básicos do Nippybox..."
+	sleep 2
+	sudo pacman -S openbox obconf-qt archlinux-xdg-menu polybar rofi libnotify dunst nitrogen picom xcompmgr plank xfce4-settings xfce4-power-manager xdg-user-dirs acpi pulsemixer xorg-xbacklight pulseaudio pulseaudio-bluetooth pulseaudio-alsa bash-completion  system-config-printer bluez-utils redshift curl qt5ct qt6ct noto-fonts-emoji --noconfirm --needed
+		
+	echo -e "\n## Instalando dependências dos Scripts"
+	sleep 2
+	sudo pacman -S python-pywal maim xclip slop ffmpeg playerctl clipnotify brightnessctl xcolor pacman-contrib --noconfirm --needed
+	
+	echo -e "\n ## Instalando Aplicativos Básicos..."
+	sleep 2
+	sudo pacman -S nano fastfetch thunar alacritty geany pavucontrol viewnior network-manager-applet blueman gvfs xfce4-terminal --noconfirm --needed
 	
 	echo "PacotesBasicos=OK" >> "$log"
 }
 
 instalarExtras () {
-	echo "## Instalando Pacotes Extras..."
-	sleep 1
-	sudo pacman -S lightdm lightdm-gtk-greeter mate-system-monitor galculator xarchiver mpv xreader arj cpio lha lrzip lzip lzop p7zip unarj unzip cups sane thunar-volman thunar-archive-plugin thunar-media-tags-plugin tumbler ffmpegthumbnailer libgepub libgsf libopenraw poppler-glib freetype2 firefox gst-plugins-ugly gst-plugins-good gst-plugins-base gst-plugins-bad gst-libav gstreamer ntfs-3g mpv-mpris webp-pixbuf-loader libwebp tumbler papirus-icon-theme pacman-contrib --noconfirm --needed
+	echo -e "\n## Instalando o LightDM..."
+	sleep 2
+	sudo pacman -S lightdm lightdm-gtk-greeter --noconfirm --needed
+	
+	echo -e "\n## Instalando Aplicativos Extras..."
+	sleep 2
+	sudo pacman -S galculator xarchiver mpv mpv-mpris xreader firefox mate-system-monitor --noconfirm --needed
+	
+	echo -e "\n## Instalando Pacotes Extras para o Thunar..."
+	sleep 2
+	sudo pacman -S thunar-volman thunar-archive-plugin thunar-media-tags-plugin tumbler ffmpegthumbnailer webp-pixbuf-loader libwebp --noconfirm --needed
+	
+	echo -e "\n## Instalando Codecs Multimídia..."
+	sleep 2
+	sudo pacman -S gst-plugins-ugly gst-plugins-good gst-plugins-base gst-plugins-bad gst-libav gstreamer --noconfirm --needed
+
+	echo -e "\n## Instalando Suporte a Sistemas de Arquivos..."
+	sleep 2
+	sudo pacman -S ntfs-3g  exfatprogs dosfstools --noconfirm --needed
+	
+	echo -e "\n## Instalando o Suporte a Impressoras..."
+	sleep 2
+	sudo pacman -S cups sane --noconfirm --needed
+
+	echo -e "\n## Instalando o Suporte a Descompactadores de Arquivos..."
+	sleep 2
+	sudo pacman -S arj cpio lha lrzip lzip lzop p7zip unarj unzip unrar --noconfirm --needed
 
 	if ! [ -z "$(ls /sys/class/power_supply/)" ]; then
 		echo "## Instalando o TLP..."
@@ -61,41 +84,12 @@ instalarExtras () {
 	fi
 
 	echo "## Instalando Suporte ao Flatpak..."
-	sleep 1
+	sleep 2
 	sudo pacman -S flatpak xdg-desktop-portal-gtk --noconfirm --needed
 
-	echo "## Habilitando o Serviço do LightDM no SystemD"
-	sudo systemctl enable lightdm
-	
-	echo "## Copiando Wallpapers para /usr/share/backgrounds..."
-	sudo cp -r $OndeEstou/backgrounds /usr/share
-
-	echo "## Definindo o Wallpaper do LightDM"
-	sudo cp "/usr/share/backgrounds/$LightDMBack" /usr/share/pixmaps
-	sudo mv "/usr/share/pixmaps/$LightDMBack" "/usr/share/pixmaps/background.png"
-	sudo sed -i 's|^#\(background=.*\)|\1|' /etc/lightdm/lightdm-gtk-greeter.conf # Descomentando a linha certa para que o Lightdm configure o Background
-	sudo sed -i 's|^background=.*|background=/usr/share/pixmaps/background.png|' /etc/lightdm/lightdm-gtk-greeter.conf # Configurando o Background do Lightdm
-	
-	echo "## Definindo o Tema do LightDM..."
-	sudo sed -i 's|^#\(theme-name=.*\)|\1|' /etc/lightdm/lightdm-gtk-greeter.conf
-	sudo sed -i 's|^theme-name=.*|theme-name=Dracula|' /etc/lightdm/lightdm-gtk-greeter.conf
-
-	sudo sed -i 's|^#\(icon-theme-name=.*\)|\1|' /etc/lightdm/lightdm-gtk-greeter.conf
-	sudo sed -i 's|^icon-theme-name=.*|icon-theme-name=Papirus-Dark|' /etc/lightdm/lightdm-gtk-greeter.conf
-	
-	echo "## Habilitando o Suporte à Impressão"
-	sudo systemctl enable cups
-	
-	echo "## Habilitando o Bluetooth"
-	sudo systemctl enable bluetooth
-	
-	echo "## Copiando Hooks para uso no Pacman..."
-	chmod +x $OndeEstou/misc/hooks/*
-	sudo cp $OndeEstou/misc/hooks/* /usr/bin/
-	sudo cp $OndeEstou/misc/libalpm/* /usr/share/libalpm/hooks
-
-	echo "## Corrigindo o Thunar..."
-	sudo nippy-hooks fix-thunar
+	echo "## Instalando Pacotes Outros Extras..."
+	sleep 2
+	sudo pacman -S libgepub libgsf libopenraw poppler-glib freetype2 papirus-icon-theme --noconfirm --needed
 	
 	echo "PacotesExtras=OK" >> "$log"
 }
@@ -103,7 +97,7 @@ instalarExtras () {
 instalarFontes () {
 	echo -e "\n## Instalando as Fontes..."
 	sudo cp fonts/* /usr/share/fonts
-	sudo fc-cache -f
+	sudo fc-cache -fv
 	cd $ondeEstou
 	
 	echo "Fontes=OK" >> "$log"
@@ -161,6 +155,39 @@ chaoticAUR () {
 }
 
 finalizarConfig () {
+	echo "## Habilitando o Serviço do LightDM no SystemD"
+	sudo systemctl enable lightdm
+	
+	echo "## Copiando Wallpapers para /usr/share/backgrounds..."
+	sudo cp -r $OndeEstou/backgrounds /usr/share
+
+	echo "## Definindo o Wallpaper do LightDM"
+	sudo cp "/usr/share/backgrounds/$LightDMBack" /usr/share/pixmaps
+	sudo mv "/usr/share/pixmaps/$LightDMBack" "/usr/share/pixmaps/background.png"
+	sudo sed -i 's|^#\(background=.*\)|\1|' /etc/lightdm/lightdm-gtk-greeter.conf # Descomentando a linha certa para que o Lightdm configure o Background
+	sudo sed -i 's|^background=.*|background=/usr/share/pixmaps/background.png|' /etc/lightdm/lightdm-gtk-greeter.conf # Configurando o Background do Lightdm
+	
+	echo "## Definindo o Tema do LightDM..."
+	sudo sed -i 's|^#\(theme-name=.*\)|\1|' /etc/lightdm/lightdm-gtk-greeter.conf
+	sudo sed -i 's|^theme-name=.*|theme-name=Dracula|' /etc/lightdm/lightdm-gtk-greeter.conf
+
+	sudo sed -i 's|^#\(icon-theme-name=.*\)|\1|' /etc/lightdm/lightdm-gtk-greeter.conf
+	sudo sed -i 's|^icon-theme-name=.*|icon-theme-name=Papirus-Dark|' /etc/lightdm/lightdm-gtk-greeter.conf
+	
+	echo "## Habilitando o Suporte à Impressão"
+	sudo systemctl enable cups
+	
+	echo "## Habilitando o Bluetooth"
+	sudo systemctl enable bluetooth
+	
+	echo "## Copiando Hooks para uso no Pacman..."
+	chmod +x $OndeEstou/misc/hooks/*
+	sudo cp $OndeEstou/misc/hooks/* /usr/bin/
+	sudo cp $OndeEstou/misc/libalpm/* /usr/share/libalpm/hooks
+
+	echo "## Corrigindo o Thunar..."
+	sudo nippy-hooks fix-thunar
+	
 	echo "## Gerando as pastas do Usuário"
 	xdg-user-dirs-update
 
