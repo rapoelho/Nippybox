@@ -2,21 +2,22 @@
 
 source /etc/os-release
 
+echo -e "## Sistema Detectado: $PRETTY_NAME \n"
+
 if [[ "$ID" == "artix" ]]; then
-	echo "Artix Detectado!"
-	echo "Detectando o Init..."
+	echo "## Detectando o Init..."
 	if ! [ -z "$(sudo pacman -Qs openrc)" ]; then
 		init="openrc"
-		echo "Init detectado: OpenRC"
+		echo "### Init detectado: OpenRC"
 	elif ! [ -z "$(sudo pacman -Qs runit)" ]; then
 		init="runit"
-		echo "Init detectado: Runit"
+		echo "### Init detectado: Runit"
 	elif ! [ -z "$(sudo pacman -Qs s6-base)" ]; then
 		init="s6-base"
-		echo "Init detectado: S6"
+		echo "### Init detectado: S6"
 	elif ! [ -z "$(sudo pacman -Qs dinit)" ]; then
 		init="dinit"
-		echo "Init detectado: dinit"
+		echo "### Init detectado: dinit"
 	fi
 	
 	lightDM="lightdm-${init}"
