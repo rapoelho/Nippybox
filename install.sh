@@ -36,7 +36,7 @@ instalarPacotes () {
 	
 	echo -e "\n## Instalando Pacotes Básicos do Nippybox..."
 	sleep 2
-	sudo pacman -S openbox obconf-qt archlinux-xdg-menu polybar rofi libnotify dunst nitrogen picom xcompmgr plank xfce4-settings xfce4-power-manager xdg-user-dirs acpi pulsemixer xorg-xbacklight pulseaudio pulseaudio-bluetooth pulseaudio-alsa bash-completion  system-config-printer bluez-utils redshift curl qt5ct qt6ct noto-fonts-emoji --noconfirm --needed
+	sudo pacman -S openbox obconf-qt archlinux-xdg-menu polybar rofi libnotify dunst feh picom xcompmgr plank xfce4-settings xfce4-power-manager xdg-user-dirs acpi pulsemixer xorg-xbacklight pulseaudio pulseaudio-bluetooth pulseaudio-alsa bash-completion  system-config-printer bluez-utils redshift curl qt5ct qt6ct noto-fonts-emoji --noconfirm --needed
 		
 	echo -e "\n## Instalando dependências dos Scripts"
 	sleep 2
