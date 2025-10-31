@@ -9,9 +9,12 @@ wall_colorizer () {
 
 ## Set wallpaper ------------------------------
 set_wallpaper() {
-	for head in {0..10}; do
-		nitrogen --head="$head" --save --set-zoom-fill "$@" &>/dev/null
-	done
+	#for head in {0..10}; do
+	#	nitrogen --head="$head" --save --set-zoom-fill "$@" &>/dev/null
+	#done
+	
+	feh --no-fehbg --bg-scale "$@"
+	sed -i "s|^wallpaper=.*|wallpaper=\"${@}\"|" $HOME/.config/nippybox/config
 }
 ## Set lockscreen -----------------------------
 set_lockscreen() {
@@ -26,4 +29,7 @@ elif [[ "$1" == '--wallpaper' ]]; then
 	set_wallpaper "$2"
 elif [[ "$1" == '--lockscreen' ]]; then
 	set_lockscreen "$2"
+elif [[ "$1" == '--restore' ]]; then
+	source $HOME/.config/nippybox/config
+	feh --bg-scale "$wallpaper"
 fi
