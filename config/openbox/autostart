@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 ## Kill if already running
-killall -9 xfsettingsd polybar dunst xfce4-power-manager
+killall -9 xfsettingsd picom polybar dunst xfce4-power-manager
 
 ## xfce4-settings daemon
 xfsettingsd &
 
 ## Restore Wallpaper
-nitrogen --restore &
+nippy-wal --restore &
 
 ## Enable power management
 xfce4-power-manager &
@@ -15,7 +15,7 @@ xfce4-power-manager &
 ## Start Compositing Manager
 exec nippy-compositor start &
 
-## Launch Polybar
+## Launch Polybar or Tint2
 exec polybar -r &
 
 ## Notification Daemon
@@ -24,14 +24,16 @@ exec dunst &
 ## Launch Plank
 exec plank &
 
-## Clipboard Manager
-nippy-clippy --daemon
-
 ## Thunar Daemon
 exec thunar --daemon &
+
+## These applets are specifically for tint2 panel.
+## If you're using tint2 as panel, Uncomment these applets.
 
 ## User Friendly Network Menu
 nm-applet --indicator &
 
 ## User Friendly Bluetooth Menu
 blueman-applet &
+
+nippy-clippy daemon &
