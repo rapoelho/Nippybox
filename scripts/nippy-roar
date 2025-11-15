@@ -17,8 +17,10 @@ option_3=" Music"
 option_4=" Shot"
 option_5="󰞅  Emoji"
 option_6=" Clippy"
-option_7="󰸉  Wallpapers"
-option_8="󰐥 Powermenu"
+option_7="󰴱  Color Picker"
+option_8="󰸉  Wallpapers"
+option_9=" Keybinds"
+option_10="󰐥  Powermenu"
 
 # Rofi CMD
 rofi_cmd() {
@@ -27,7 +29,7 @@ rofi_cmd() {
 
 # Pass variables to rofi dmenu
 run_rofi() {
-	echo -e "$option_1\n$option_2\n$option_3\n$option_4\n$option_5\n$option_6\n$option_7\n$option_8" | rofi_cmd
+	echo -e "$option_1\n$option_2\n$option_3\n$option_4\n$option_5\n$option_6\n$option_7\n$option_8\n$option_9\n$option_10" | rofi_cmd
 }
 
 # Execute Command
@@ -45,8 +47,12 @@ run_cmd() {
 	elif [[ "$1" == '--opt6' ]]; then
 		nippy-clippy rofi
 	elif [[ "$1" == '--opt7' ]]; then
-		rofi-wal
+		nippy-colorpicker rofi
 	elif [[ "$1" == '--opt8' ]]; then
+		rofi-wal
+	elif [[ "$1" == '--opt9' ]]; then
+		rofi-launcher keys
+	elif [[ "$1" == '--opt10' ]]; then
 		rofi-powermenu
 	fi
 }
@@ -77,5 +83,11 @@ case ${chosen} in
 		;;
     $option_8)
 		run_cmd --opt8
+		;;
+	$option_9)
+		run_cmd --opt9
+		;;
+	$option_10)
+		run_cmd --opt10
 		;;
 esac
