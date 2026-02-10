@@ -11,7 +11,7 @@ rPlank () {
 }
 
 rWal () {
-	nitrogen --restore
+	nippy-wal --restore
 }
 
 rCompositor () {

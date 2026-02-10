@@ -64,7 +64,7 @@ def mk_exe_node(output, name, command):
 
     """
     CMD = 'xrandr --output %s ' % output
-    CMD_1 = 'nitrogen --restore'
+    CMD_1 = 'nippy-wal --restore'
     CMD_2 = 'nippy-relaunch polybar'
 
     # Apply Mode
