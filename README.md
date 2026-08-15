@@ -87,7 +87,10 @@ Não é só do Openbox e dos Scripts que o Nippybox é formado, mas também de u
 - Pode haver problemas de conexão com Fones Bluetooth quando o sistema volta da suspensão.
 
 ## TODO
+- Criar um Gerenciador de Energia para o Nippybox;
+- Adequar alguns scripts para Python, para diminuir as Gambiarras;
 - Fazer uma versão minha dos Ícones Mágicos para a instalação de alguns aplicativos;
 - Configurar o Better Lockscreen para bloquear a tela quando o computador ficar inativo por um tempo;
-- Tornar o Instalador do Nippybox compatível com o Artix;
+- Portar o Nippybox para o Void Linux;
+- Reestruturar o Script de Instalação;
 - Adicionar o Suporte ao XLibre.
